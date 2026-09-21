@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Solution {
+namespace Solution
+{
     public class Inventory : MonoBehaviour
     {
         public Dictionary<string, int> inventory = new Dictionary<string, int>();
@@ -10,7 +11,14 @@ namespace Solution {
         public void AddItem(string item, int amount)
         {
             // 1. ตรวจสอบว่ามีไอเท็มนี้ในคลังแล้วหรือยัง
-           
+            if (inventory.ContainsKey(item))
+            {
+                inventory[item] += amount;
+            }
+            else
+            {
+                inventory.Add(item, amount);
+            }
 
             Debug.Log("Added " + amount + " " + item + ". Total: " + inventory[item]);
         }
@@ -19,17 +27,43 @@ namespace Solution {
         public void RemoveItem(string item, int amount)
         {
             //4. ตรวจสอบว่ามีไอเท็มนี้ในคลังหรือไม่
-            
+            if (HasItem(item, amount))
+            {
+                inventory[item] -= amount;
+                if (inventory[item] <= 0)
+                {
+                    inventory.Remove(item);
+                    Debug.Log("Remvoe all " + item + "from inventory.");
+                }
+                else
+                {
+                    Debug.Log("Remvoe " + amount + " " + item);
+                }
+
+            }
+
+
+            else
+            {
+                Debug.Log("can not remove  item");
+            }
+
+
         }
         public bool HasItem(string item, int amount)
         {
             //2. ตรวจสอบว่ามีไอเท็มนี้ในคลังหรือไม่ และมีจำนวนเพียงพอหรือไม่
-            return false;
+
+            return inventory.ContainsKey(item) && inventory[item] >= amount;
         }
         // ตรวจสอบจำนวนไอเท็ม
         public int GetItemCount(string item)
         {
             //3. ตรวจสอบว่ามีไอเท็มนี้ในคลังหรือไม่ ถ้ามีให้คืนค่าจำนวนไอเท็มนั้น
+            if (HasItem(item, 1))
+            {
+                return inventory[item];
+            }
             return 0;
         }
 
@@ -50,4 +84,3 @@ namespace Solution {
         }
     }
 }
-
